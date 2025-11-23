@@ -1,16 +1,24 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+App Name: ToDo App
 
-Currently, two official plugins are available:
+Description:
+React is a JavaScript library for building web app user interfaces. While working within a React project, we have to select a build tool and server, such as Vite. Vite is a quick and easy build tool for frontend development that includes near-instant server startup.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Installation Instructions/Run Developer Server:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Create a new public repo on GitHub
+   give it the name "todo-list"
+   clone the repo to your local environment (this differs based on if you're using HTTPS, SSH, or GitHub Desktop. See GitHub's documentation on remote repos for more details.)
+2. Scaffold Vite Using CLI
+   Bootstrap a new project with command: npm create vite@latest . -- --template react
+   Install with command: npm install
+3. Commit and push in the terminal to github.
+4. Start the development server with the command: npm run dev. Open a browser to the Local link listed in the CLI
+5. Clean up App's code:
+   -Remove imports and add what is needed.
+   -Create an array of objects to represent your todo-lists.
+6. Commit changes to your local working branch.
+   -Push the changes up to GitHub and publish if have not.
+   -In GitHub, create a pull request that compares the working branch to main.
+   - Copy the pull request link and submit assignment.

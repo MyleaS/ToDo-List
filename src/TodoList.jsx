@@ -1,4 +1,5 @@
 import TodoForm from "./TodoForm";
+import TodoListItem from "./TodoListItem";
 
 function TodoList() {
   const todos = [
@@ -10,11 +11,9 @@ function TodoList() {
   return (
     <div>
       <h1>Todo List</h1>
-      <TodoForm />
-      <h3>Tasks:</h3>
       <ul>
         {todos.map((todo) => (
-          <li key={todo.id}>{todo.title}</li>
+          <TodoListItem key={todo.id} name={todo.title} />
         ))}
       </ul>
     </div>

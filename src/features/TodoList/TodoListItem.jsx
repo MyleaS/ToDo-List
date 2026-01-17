@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
   const [workingTitle, setWorkingTitle] = useState(todo.title);
+
+  // Edge case: reset workingTitle if todo.title changes
+  useEffect(() => {
+    setWorkingTitle(todo.title);
+  }, [todo]); // runs whenever todo changes
 
   function handleUpdate(event) {
     if (!isEditing) return;

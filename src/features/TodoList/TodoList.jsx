@@ -1,6 +1,14 @@
 import TodoListItem from "./TodoListItem";
 
-function TodoList({ todoList, onCompleteTodo, onUpdateTodo }) {
+function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
+  if (isLoading) {
+    return <p>Todo list loading...</p>;
+  }
+
+  if (todoList.length === 0) {
+    return <p>Todo list loading...!</p>;
+  }
+
   return (
     <ul>
       {todoList.map((todo) => (

@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
+import TextInputWithLabel from "../../shared/TextInputWithLabel";
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
   const [workingTitle, setWorkingTitle] = useState(todo.title);
 
-  // Edge case: reset workingTitle if todo.title changes
   useEffect(() => {
     setWorkingTitle(todo.title);
-  }, [todo]); // runs whenever todo changes
+  }, [todo]);
+
+  function handleEdit(event) {
+    setWorkingTitle(event.target.value);
+  }
+
+  function handleCancel() {
+    setWorkingTitle(todo.title);
+    setIsEditing(false);
+  }
 
   function handleUpdate(event) {
     if (!isEditing) return;
@@ -26,18 +35,14 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     <li>
       {isEditing ? (
         <form onSubmit={handleUpdate}>
-          <input
+          <TextInputWithLabel
             value={workingTitle}
-            onChange={(e) => setWorkingTitle(e.target.value)}
+            onChange={handleEdit}
+            elementId={`todo${todo.id}`}
+            labelText="Todo"
           />
 
-          <button
-            type="button"
-            onClick={() => {
-              setWorkingTitle(todo.title);
-              setIsEditing(false);
-            }}
-          >
+          <button type="button" onClick={handleCancel}>
             Cancel
           </button>
 
@@ -46,11 +51,18 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
           </button>
         </form>
       ) : (
-        <>
-          <span>{todo.title}</span>
-          <button onClick={() => onCompleteTodo(todo.id)}>Complete</button>
-          <button onClick={() => setIsEditing(true)}>Edit</button>
-        </>
+        <form>
+          <label>
+            <input
+              type="checkbox"
+              id={`checkbox${todo.id}`}
+              checked={todo.isCompleted}
+              onChange={() => onCompleteTodo(todo.id)}
+            />
+          </label>
+
+          <span onClick={() => setIsEditing(true)}>{todo.title}</span>
+        </form>
       )}
     </li>
   );

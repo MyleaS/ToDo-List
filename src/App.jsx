@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import TodoList from "./features/TodoList/TodoList";
 import TodoForm from "./features/TodoForm";
 import TodosViewForm from "./features/TodosViewForm";
@@ -11,8 +11,6 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [sortField, setSortField] = useState("createdTime");
   const [sortDirection, setSortDirection] = useState("desc");
-
-  // NEW: queryString state
   const [queryString, setQueryString] = useState("");
 
   // Base URL and token
@@ -21,18 +19,17 @@ function App() {
   }`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  // UPDATED: encodeUrl utility
-  function encodeUrl({ sortField, sortDirection, queryString }) {
+  // encodeUrl now owns all dependencies
+  const encodeUrl = useCallback(() => {
     const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
 
     let searchQuery = "";
-
     if (queryString) {
       searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
     }
 
     return encodeURI(`${url}?${sortQuery}${searchQuery}`);
-  }
+  }, [url, sortField, sortDirection, queryString]);
 
   // Fetch todos (GET)
   useEffect(() => {
@@ -40,13 +37,10 @@ function App() {
       setIsLoading(true);
 
       try {
-        const resp = await fetch(
-          encodeUrl({ sortField, sortDirection, queryString }),
-          {
-            method: "GET",
-            headers: { Authorization: token },
-          }
-        );
+        const resp = await fetch(encodeUrl(), {
+          method: "GET",
+          headers: { Authorization: token },
+        });
 
         if (!resp.ok) {
           const errorData = await resp.json();
@@ -71,9 +65,8 @@ function App() {
     };
 
     fetchTodos();
-  }, [sortField, sortDirection, queryString]); // ✅ queryString added
+  }, [encodeUrl, token]);
 
-  // Add a todo (POST)
   async function addTodo(title) {
     const payload = {
       records: [{ fields: { title, isCompleted: false } }],
@@ -182,7 +175,6 @@ function App() {
         onUpdateTodo={updateTodo}
       />
 
-      {/* ✅ UPDATED props */}
       <TodosViewForm
         sortField={sortField}
         setSortField={setSortField}

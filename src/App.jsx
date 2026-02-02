@@ -161,36 +161,38 @@ function App() {
   }
 
   return (
-    <div>
-      <h1>Todo List</h1>
+    <div className="appContainer">
+      <div className="todoContainer">
+        <h1>Todo List</h1>
 
-      {isLoading && <p>Loading...</p>}
+        {isLoading && <p>Loading...</p>}
 
-      <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
+        <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
 
-      <TodoList
-        todoList={todoList}
-        isLoading={isLoading}
-        onCompleteTodo={completeTodo}
-        onUpdateTodo={updateTodo}
-      />
+        <TodoList
+          todoList={todoList}
+          isLoading={isLoading}
+          onCompleteTodo={completeTodo}
+          onUpdateTodo={updateTodo}
+        />
 
-      <TodosViewForm
-        sortField={sortField}
-        setSortField={setSortField}
-        sortDirection={sortDirection}
-        setSortDirection={setSortDirection}
-        queryString={queryString}
-        setQueryString={setQueryString}
-      />
+        <TodosViewForm
+          sortField={sortField}
+          setSortField={setSortField}
+          sortDirection={sortDirection}
+          setSortDirection={setSortDirection}
+          queryString={queryString}
+          setQueryString={setQueryString}
+        />
 
-      {errorMessage && (
-        <div>
-          <hr />
-          <p>{errorMessage}</p>
-          <button onClick={() => setErrorMessage("")}>Dismiss</button>
-        </div>
-      )}
+        {errorMessage && (
+          <div className="errorMessage">
+            <hr />
+            <p>{errorMessage}</p>
+            <button onClick={() => setErrorMessage("")}>Dismiss</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

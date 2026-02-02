@@ -1,8 +1,19 @@
+import styled from "styled-components";
+
+/* Styled components */
+const StyledLabel = styled.label`
+  padding: 4px;
+`;
+
+const StyledInput = styled.input`
+  padding: 4px;
+`;
+
 function TextInputWithLabel({ elementId, label, value, onChange, ref }) {
   return (
     <>
-      <label htmlFor={elementId}>{label}</label>
-      <input
+      <StyledLabel htmlFor={elementId}>{label}</StyledLabel>
+      <StyledInput
         type="text"
         id={elementId}
         ref={ref}

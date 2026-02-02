@@ -1,0 +1,67 @@
+/* App.css */
+
+/* Global text styles */
+body {
+  margin: 0;
+  font-family: "Roboto", Arial, sans-serif;
+  color: #333;
+  background-color: #dd8383;
+}
+
+/* Center the app in the body */
+.appContainer {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  min-height: 100vh; /* Full viewport height */
+  text-align: center;
+}
+
+.todoContainer {
+  flex: 1; /* all boxes take equal width */
+  padding: 20px;
+  text-align: center;
+}
+
+/* Error message container */
+.errorMessage {
+  border: 5px solid #120b0c;
+  background-color: #8dd534;
+  color: #b00020;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 6px;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+/* Paragraphs and common text */
+p,
+span,
+li,
+label {
+  font-family: "Roboto", Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Buttons and inputs */
+button {
+  font-family: "Roboto", Arial, sans-serif;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font-family: inherit;
+}

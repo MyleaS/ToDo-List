@@ -1,16 +1,17 @@
 import TodoListItem from "./TodoListItem";
+import "./TodosList.css";
 
 function TodoList({ todoList, isLoading, onCompleteTodo, onUpdateTodo }) {
   const filteredTodoList = todoList.filter((todo) => !todo.isCompleted);
 
   return (
-    <>
+    <div>
       {isLoading ? (
-        <p>Todo list loading...</p>
+        <p className="loading">Todo list loading...</p>
       ) : filteredTodoList.length === 0 ? (
         <p>Add todo above to get started</p>
       ) : (
-        <ul>
+        <ul className="list">
           {filteredTodoList.map((todo) => (
             <TodoListItem
               key={todo.id}
@@ -21,7 +22,7 @@ function TodoList({ todoList, isLoading, onCompleteTodo, onUpdateTodo }) {
           ))}
         </ul>
       )}
-    </>
+    </div>
   );
 }
 

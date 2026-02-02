@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import TextInputWithLabel from "../../shared/TextInputWithLabel";
+import "./TodoListItem.css";
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -32,7 +33,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   }
 
   return (
-    <li>
+    <li className="todoListItem">
       {isEditing ? (
         <form onSubmit={handleUpdate}>
           <TextInputWithLabel
@@ -42,7 +43,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
             labelText="Todo"
           />
 
-          <button type="button" onClick={handleCancel}>
+          <button className="cancelBtn" type="button" onClick={handleCancel}>
             Cancel
           </button>
 

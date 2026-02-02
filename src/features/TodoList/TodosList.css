@@ -1,0 +1,9 @@
+.loading {
+  font-style: italic;
+  color: #4a1eec;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+}

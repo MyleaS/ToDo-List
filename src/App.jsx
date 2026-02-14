@@ -1,25 +1,26 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useReducer } from "react";
 import TodoList from "./features/TodoList/TodoList";
 import TodoForm from "./features/TodoForm";
 import TodosViewForm from "./features/TodosViewForm";
 import "./App.css";
+import {
+  reducer as todosReducer,
+  actions as todoActions,
+  initialState as initialTodosState,
+} from "./reducers/todos.reducer";
 
 function App() {
-  const [todoList, setTodoList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [todoListState, dispatch] = useReducer(todosReducer, initialTodosState);
+
   const [sortField, setSortField] = useState("createdTime");
   const [sortDirection, setSortDirection] = useState("desc");
   const [queryString, setQueryString] = useState("");
 
-  // Base URL and token
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${
     import.meta.env.VITE_TABLE_NAME
   }`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  // encodeUrl now owns all dependencies
   const encodeUrl = useCallback(() => {
     const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
 
@@ -31,10 +32,10 @@ function App() {
     return encodeURI(`${url}?${sortQuery}${searchQuery}`);
   }, [url, sortField, sortDirection, queryString]);
 
-  // Fetch todos (GET)
+  // FETCH TODOS
   useEffect(() => {
     const fetchTodos = async () => {
-      setIsLoading(true);
+      dispatch({ type: todoActions.fetchTodos });
 
       try {
         const resp = await fetch(encodeUrl(), {
@@ -50,31 +51,31 @@ function App() {
         }
 
         const data = await resp.json();
-        const todos = data.records.map((record) => ({
-          id: record.id,
-          title: record.fields.title,
-          isCompleted: record.fields.isCompleted ?? false,
-        }));
 
-        setTodoList(todos);
+        dispatch({
+          type: todoActions.loadTodos,
+          records: data.records,
+        });
       } catch (error) {
-        setErrorMessage(error.message);
-      } finally {
-        setIsLoading(false);
+        dispatch({
+          type: todoActions.setLoadError,
+          error,
+        });
       }
     };
 
     fetchTodos();
   }, [encodeUrl, token]);
 
+  // ADD TODO
   async function addTodo(title) {
     const payload = {
       records: [{ fields: { title, isCompleted: false } }],
     };
 
-    try {
-      setIsSaving(true);
+    dispatch({ type: todoActions.startRequest });
 
+    try {
       const resp = await fetch(url, {
         method: "POST",
         headers: {
@@ -92,30 +93,36 @@ function App() {
       }
 
       const { records } = await resp.json();
-      const savedTodo = {
-        id: records[0].id,
-        ...records[0].fields,
-        isCompleted: records[0].fields.isCompleted ?? false,
-      };
 
-      setTodoList([...todoList, savedTodo]);
+      dispatch({
+        type: todoActions.addTodo,
+        record: records[0],
+      });
+
+      dispatch({ type: todoActions.endRequest });
     } catch (error) {
-      setErrorMessage(error.message);
-    } finally {
-      setIsSaving(false);
+      dispatch({
+        type: todoActions.setLoadError,
+        error,
+      });
+
+      dispatch({ type: todoActions.endRequest });
     }
   }
 
+  // COMPLETE TODO
   function completeTodo(id) {
-    setTodoList(
-      todoList.map((todo) =>
-        todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
-      )
-    );
+    dispatch({
+      type: todoActions.completeTodo,
+      id,
+    });
   }
 
+  // UPDATE TODO (Optimistic)
   async function updateTodo(editedTodo) {
-    const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
+    const originalTodo = todoListState.todoList.find(
+      (todo) => todo.id === editedTodo.id
+    );
 
     const payload = {
       records: [
@@ -129,9 +136,13 @@ function App() {
       ],
     };
 
-    try {
-      setIsSaving(true);
+    // Optimistic update
+    dispatch({
+      type: todoActions.updateTodo,
+      editedTodo,
+    });
 
+    try {
       const resp = await fetch(url, {
         method: "PATCH",
         headers: {
@@ -144,19 +155,12 @@ function App() {
       if (!resp.ok) {
         throw new Error(`HTTP error! status: ${resp.status}`);
       }
-
-      setTodoList(
-        todoList.map((todo) => (todo.id === editedTodo.id ? editedTodo : todo))
-      );
     } catch (error) {
-      setErrorMessage(`${error.message}. Reverting todo...`);
-      setTodoList(
-        todoList.map((todo) =>
-          todo.id === originalTodo.id ? originalTodo : todo
-        )
-      );
-    } finally {
-      setIsSaving(false);
+      dispatch({
+        type: todoActions.revertTodo,
+        editedTodo: originalTodo,
+        error,
+      });
     }
   }
 
@@ -165,13 +169,13 @@ function App() {
       <div className="todoContainer">
         <h1>Todo List</h1>
 
-        {isLoading && <p>Loading...</p>}
+        {todoListState.isLoading && <p>Loading...</p>}
 
-        <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
+        <TodoForm onAddTodo={addTodo} isSaving={todoListState.isSaving} />
 
         <TodoList
-          todoList={todoList}
-          isLoading={isLoading}
+          todoList={todoListState.todoList}
+          isLoading={todoListState.isLoading}
           onCompleteTodo={completeTodo}
           onUpdateTodo={updateTodo}
         />
@@ -185,11 +189,13 @@ function App() {
           setQueryString={setQueryString}
         />
 
-        {errorMessage && (
+        {todoListState.errorMessage && (
           <div className="errorMessage">
             <hr />
-            <p>{errorMessage}</p>
-            <button onClick={() => setErrorMessage("")}>Dismiss</button>
+            <p>{todoListState.errorMessage}</p>
+            <button onClick={() => dispatch({ type: todoActions.clearError })}>
+              Dismiss
+            </button>
           </div>
         )}
       </div>

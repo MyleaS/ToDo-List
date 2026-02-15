@@ -1,0 +1,12 @@
+.cancelBtn {
+  margin-left: 8px;
+  background-color: #f44336; /* Red */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.todoListItem {
+  padding-bottom: 10px;
+}

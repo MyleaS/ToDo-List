@@ -1,4 +1,4 @@
-/* App.css */
+/* App.module.css */
 
 /* Global text styles */
 body {
@@ -11,16 +11,39 @@ body {
 /* Center the app in the body */
 .appContainer {
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  min-height: 100vh; /* Full viewport height */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   text-align: center;
+  position: relative; /* Needed for absolute nav positioning */
 }
 
 .todoContainer {
-  flex: 1; /* all boxes take equal width */
+  flex: 1;
   padding: 20px;
   text-align: center;
+  position: relative;
+}
+
+/* Navigation */
+.nav {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+/* Active & Inactive link styles */
+.active {
+  color: #888; /* subdued gray */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.inactive {
+  color: #333; /* primary text color */
+  text-decoration: none;
 }
 
 /* Error message container */
@@ -34,6 +57,10 @@ body {
 }
 
 /* Headings */
+h1 {
+  text-align: center;
+}
+
 h1,
 h2,
 h3,
@@ -64,4 +91,37 @@ button {
 input,
 textarea {
   font-family: inherit;
+}
+
+/* Pagination controls */
+.pagination {
+  display: flex; /* Arrange children horizontally */
+  align-items: center; /* Vertically center buttons and text */
+  justify-content: center; /* Center pagination in container */
+  gap: 1rem; /* Space between buttons and text */
+  margin-top: 2rem; /* Space above pagination */
+}
+
+.pagination button {
+  padding: 0.5rem 1rem; /* Add internal spacing */
+  border: 1px solid #888; /* Light border to match nav links */
+  background-color: #f9f9f9; /* Neutral background */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.pagination button:disabled {
+  opacity: 0.5; /* Dim disabled buttons */
+  cursor: not-allowed;
+}
+
+.pagination button:not(:disabled):hover {
+  background-color: #e0e0e0; /* Hover effect for enabled buttons */
+}
+
+.pagination span {
+  font-size: 0.95rem;
+  font-weight: 500;
 }

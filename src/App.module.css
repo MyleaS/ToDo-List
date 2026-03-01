@@ -1,4 +1,4 @@
-/* App.css */
+/* App.module.css */
 
 /* Global text styles */
 body {
@@ -11,16 +11,39 @@ body {
 /* Center the app in the body */
 .appContainer {
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  min-height: 100vh; /* Full viewport height */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   text-align: center;
+  position: relative; /* Needed for absolute nav positioning */
 }
 
 .todoContainer {
-  flex: 1; /* all boxes take equal width */
+  flex: 1;
   padding: 20px;
   text-align: center;
+  position: relative;
+}
+
+/* Navigation */
+.nav {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+/* Active & Inactive link styles */
+.active {
+  color: #888; /* subdued gray */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.inactive {
+  color: #333; /* primary text color */
+  text-decoration: none;
 }
 
 /* Error message container */
@@ -34,6 +57,10 @@ body {
 }
 
 /* Headings */
+h1 {
+  text-align: center;
+}
+
 h1,
 h2,
 h3,
